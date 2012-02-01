@@ -2,8 +2,6 @@ import ConfigParser
 import psutil
 import subprocess
 
-config_file='/home/navin/.ssh/config'
-
 class BadProcess(Exception):
     pass
 
@@ -37,5 +35,13 @@ def handle_all(config_file):
 
 
 if __name__ == '__main__':
-    handle_all('/tmp/config.cfg')
-
+    import argparse
+    from os.path import expanduser, exists
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--config-file', default='~/pyrestarter.cfg')
+    args = parser.parse_args()
+    config_file = expanduser(args.config_file)
+    if not exists(config_file):
+        print 'No such file {0}'.format(config_file)
+        exit(1)
+    handle_all(config_file)
