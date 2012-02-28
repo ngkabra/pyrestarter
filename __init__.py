@@ -1,3 +1,7 @@
+import logging
+logger = logging.getLogger(__name__)
+
+
 import ConfigParser
 import psutil
 import subprocess
@@ -20,7 +24,10 @@ def handle(program, command, pidfile, verifier,
            dry_run=False,
            **kwargs):
     if kwargs.get('skip', '').lower() in ('true', 'yes'):
+        logger.debug('Skipping ' + program)
         return
+    else:
+        logger.debug('Handling ' + program)
 
     pidfile = pidfile.format(program=program)
     verifier = verifier.format(program=program)
@@ -34,6 +41,7 @@ def handle(program, command, pidfile, verifier,
         if verifier not in pcmd:
             raise BadProcess(verifier + '::' + pcmd)
     except (IOError, psutil.NoSuchProcess, BadProcess):
+        logger.debug('Restarting ' + program)
         restart(command, pidfile, kwargs.get('chdir'), dry_run=dry_run)
 
 
@@ -53,7 +61,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config-file', default='~/pyrestarter.cfg')
     parser.add_argument('-n', '--dry-run', action='store_true', default=False)
+    parser.add_argument('-d', '--debug', action='store_true', default=False)
     args = parser.parse_args()
+    logging.basicConfig(level=logging.DEBUG if args.debug else logging.INFO)
+    logger.debug('Started pyrestarter')
     config_file = expanduser(args.config_file)
     if not exists(config_file):
         print 'No such file {0}'.format(config_file)
