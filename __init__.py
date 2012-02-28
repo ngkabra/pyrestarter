@@ -20,7 +20,9 @@ def restart(command, pidfile, chdir, dry_run=False,
     if chdir:
         daemonize.extend(['-c', chdir])
 
-    command[0:0] = daemonize
+    if daemonize.lower() not in ('no', 'false'):
+        command[0:0] = daemonize
+
     if not dry_run:
         subprocess.Popen(command)
     else:
