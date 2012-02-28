@@ -10,18 +10,18 @@ class BadProcess(Exception):
     pass
 
 def restart(command, pidfile, chdir, dry_run=False,
-            daemonize_cmd=None):
-    if daemonize_cmd:
-        daemonize = daemonize_cmd.split()
-    else:
-        daemonize = ['/usr/bin/env', 'daemonize']
-
-    daemonize.extend(['-p', pidfile])
-    if chdir:
-        daemonize.extend(['-c', chdir])
+            daemonize_cmd=None, daemonize=''):
 
     if daemonize.lower() not in ('no', 'false'):
-        command[0:0] = daemonize
+        if daemonize_cmd:
+            dcmd = daemonize_cmd.split()
+        else:
+            dcmd = ['/usr/bin/env', 'daemonize']
+
+            dcmd.extend(['-p', pidfile])
+        if chdir:
+            dcmd.extend(['-c', chdir])
+        command[0:0] = dcmd
 
     if not dry_run:
         subprocess.Popen(command)
