@@ -19,6 +19,9 @@ def restart(command, pidfile, chdir, dry_run=False):
 def handle(program, command, pidfile, verifier,
            dry_run=False,
            **kwargs):
+    if kwargs.get('skip', '').lower() in ('true', 'yes'):
+        return
+
     pidfile = pidfile.format(program=program)
     verifier = verifier.format(program=program)
     # replace {program} in pidfile/verifier name with actual program name
