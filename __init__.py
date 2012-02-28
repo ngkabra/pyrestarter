@@ -9,8 +9,14 @@ import subprocess
 class BadProcess(Exception):
     pass
 
-def restart(command, pidfile, chdir, dry_run=False):
-    daemonize = ['/usr/bin/env', 'daemonize', '-p', pidfile]
+def restart(command, pidfile, chdir, dry_run=False,
+            daemonize_cmd=None):
+    if daemonize_cmd:
+        daemonize = daemonize_cmd.split()
+    else:
+        daemonize = ['/usr/bin/env', 'daemonize']
+
+    daemonize.extend(['-p', pidfile])
     if chdir:
         daemonize.extend(['-c', chdir])
 

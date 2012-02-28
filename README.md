@@ -8,9 +8,9 @@ See example_pyrestarter.cfg for examples. Here only rundir and pidfile are neces
 
 ### Usage
 
-Install daemonize and ensure that it is in the path. pyrestarter.py uses daemonize to put your command in the background.
+Install daemonize. pyrestarter.py uses daemonize to put your command in the background.
 
-Create a pyrestarter.cfg in your home directory, and configure 'rundir. Make sure the 'rundir' directory exists and is writable by pyrestarter.py. Then put:
+Create a pyrestarter.cfg in your home directory, and configure 'rundir' and 'daemonize_cmd'. Make sure the 'rundir' directory exists and is writable by pyrestarter.py. Then put:
 
        pyrestarter.py
 
