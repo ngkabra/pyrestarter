@@ -48,7 +48,8 @@ def handle(program, command, pidfile, verifier,
             raise BadProcess(verifier + '::' + pcmd)
     except (IOError, psutil.NoSuchProcess, BadProcess):
         logger.debug('Restarting ' + program)
-        restart(command, pidfile, kwargs.get('chdir'), dry_run=dry_run)
+        restart(command, pidfile, kwargs.get('chdir'),
+                dry_run=dry_run, daemonize_cmd=kwargs.get('daemonize_cmd'))
 
 
 def handle_all(config_file, dry_run=False):
