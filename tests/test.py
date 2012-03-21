@@ -7,7 +7,6 @@ sys.path.append(dirname(dirname(dirname(__file__))))
 import unittest
 import psutil
 import subprocess
-import time
 
 class TestError(Exception):
     pass
@@ -19,7 +18,7 @@ class MultipleProcessesFound(TestError):
 
 class Test(unittest.TestCase):
     def setUp(self):
-        self.config_file = join(dirname(__file__), 'testconfig.py')
+        self.config_file = join(dirname(__file__), 'testconfig.cfg')
         self.verifiers = ('verifier1', 'verifier2', '13079')
         self.cmd = ['python',
                     join(dirname(dirname(__file__)), '__init__.py'),
