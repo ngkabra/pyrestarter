@@ -19,11 +19,12 @@ class MultipleProcessesFound(TestError):
 class Test(unittest.TestCase):
     def setUp(self):
         self.config_file = join(dirname(__file__), 'testconfig.cfg')
-        self.verifiers = ('verifier1', 'verifier2', '13079')
-        self.cmd = ['python',
-                    join(dirname(dirname(__file__)), '__init__.py'),
+        self.verifiers = ('verifier1', 'verifier2', '15715')
+        self.cmd = ['/home/navin/.v/p27/bin/python',
+                    '-m',
+                    'pyrestarter',
                     '-c',
-                    join(dirname(__file__), 'testconfig.py'),]
+                    join(dirname(__file__), 'testconfig.cfg'),]
 
     def tearDown(self):
         self.killall()
@@ -73,11 +74,11 @@ class Test(unittest.TestCase):
 
     def test_start(self):
         self.assertNoProcesses()
-        subprocess.call(self.cmd)
+        subprocess.check_call(self.cmd)
         self.assertAllProcesses()
         self.killall()
         self.assertNoProcesses()
-        subprocess.call(self.cmd)
+        subprocess.check_call(self.cmd)
         self.assertAllProcesses()
         for verifier_to_kill in self.verifiers:
             self.kill_process(verifier_to_kill)
@@ -86,7 +87,7 @@ class Test(unittest.TestCase):
                     self.assertNoProcess(verifier)
                 else:
                     self.assertProcess(verifier)
-            subprocess.call(self.cmd)
+            subprocess.check_call(self.cmd)
             self.assertAllProcesses()
 
 
