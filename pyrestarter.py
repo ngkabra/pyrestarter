@@ -46,7 +46,7 @@ def find_program(pidfile, verifier):
         try:
             pid = int(open(pidfile).read())
             p = psutil.Process(pid)
-            pcmd = ' '.join(p.cmdline)
+            pcmd = ' '.join(p.cmdline())
             if verifier not in pcmd:
                 raise VerifierFailed(verifier + '::' + pcmd)
             else:
@@ -59,9 +59,9 @@ def find_program(pidfile, verifier):
         for pid in psutil.get_pid_list():
             try:
                 p = psutil.Process(pid)
-            except psutil.error.NoSuchProcess:
+            except psutil.error.NoSuchPress:
                 pass
-            pcmd = ' '.join(p.cmdline)
+            pcmd = ' '.join(p.cmdline())
             if verifier in pcmd:
                 matches.append(p)
         if len(matches) == 2:
