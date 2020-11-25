@@ -1,10 +1,14 @@
+from __future__ import print_function, unicode_literals
+from future import standard_library
+standard_library.install_aliases()
 import logging
 logger = logging.getLogger(__name__)
 
 
-import ConfigParser
+import configparser
 import psutil
 import subprocess
+import time
 
 
 class PyRestarterError(Exception):
@@ -35,10 +39,14 @@ def restart(command, pidfile, chdir, dry_run=False,
         command = dcmd + ' ' + command
 
     if not dry_run:
-        logger.debug('Run cmd: {}'.format(command))
-        subprocess.check_call(command, shell=True)
+        logger.info('Run cmd: {}'.format(command))
+        retval = subprocess.check_call(command, shell=True)
+        logger.debug('Check_call returned {}'.format(retval))
+        # ugly hack, because cron on rseval somehow
+        # manages to kill the subprocess
+        time.sleep(1)
     else:
-        print '(Re-)Start:', command
+        print('(Re-)Start: {}'.format(command))
 
 def find_program(pidfile, verifier):
     '''Return the psutil.Process if process is running, else None'''
@@ -99,7 +107,7 @@ def handle(program, command, pidfile, verifier,
             if not dry_run:
                 process.kill()
             else:
-                print 'Kill: ', process
+                print('Kill: {}'.format(process))
         else:
             logger.debug('Process {} is not running'.format(program))
         if kill_program:
@@ -109,8 +117,8 @@ def handle(program, command, pidfile, verifier,
         do_restart = not process
 
     if show_status:
-        print '{} is {}running'.format(program,
-                                        'NOT ' if do_restart else '')
+        print('{} is {}running'.format(program,
+                                       'NOT ' if do_restart else ''))
     elif do_restart:
         logger.debug('Restarting ' + program)
         restart(command, pidfile, kwargs.get('chdir'),
@@ -126,7 +134,7 @@ def handle_all(config_file, dry_run=False,
                kill_program=None,
                kill_all=False,
                show_status=False):
-    c = ConfigParser.SafeConfigParser()
+    c = configparser.SafeConfigParser()
     c.read(config_file)
 
     if force_restart or kill_program:
@@ -168,7 +176,7 @@ if __name__ == '__main__':
     logger.debug('Started pyrestarter')
     config_file = expanduser(args.config_file)
     if not exists(config_file):
-        print 'No such file {0}'.format(config_file)
+        print('No such file {0}'.format(config_file))
         exit(1)
 
     handle_all(config_file,

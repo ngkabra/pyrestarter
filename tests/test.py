@@ -1,5 +1,6 @@
 # Needed only if you are running nosetests from local directory
 # nosetests test_api - should work
+from __future__ import print_function, unicode_literals
 import sys
 from os.path import dirname, join
 sys.path.append(dirname(dirname(dirname(__file__))))
@@ -53,7 +54,7 @@ class Test(unittest.TestCase):
             if len(found_p) == 1:
                 return found_p[0]
             else:
-                print [(p.pid, p.cmdline) for p in found_p]
+                print([(p.pid, p.cmdline) for p in found_p])
                 raise MultipleProcessesFound(verifier)
         else:
             return None
