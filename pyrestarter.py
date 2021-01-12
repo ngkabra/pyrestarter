@@ -1,6 +1,4 @@
 from __future__ import print_function, unicode_literals
-from future import standard_library
-standard_library.install_aliases()
 import logging
 logger = logging.getLogger(__name__)
 
@@ -134,7 +132,7 @@ def handle_all(config_file, dry_run=False,
                kill_program=None,
                kill_all=False,
                show_status=False):
-    c = configparser.SafeConfigParser()
+    c = configparser.ConfigParser()
     c.read(config_file)
 
     if force_restart or kill_program:
